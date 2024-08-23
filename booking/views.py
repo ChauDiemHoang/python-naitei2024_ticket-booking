@@ -14,6 +14,9 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils import timezone
 from ticketbooking import settings
+from django.contrib.auth.decorators import login_required
+import pycountry
+
 
 # Create your views here.
 def login_view(request):
@@ -236,7 +239,6 @@ def flight_list(request):
     }
     return render(request, "flight_list.html", context)
 
-
 def verify_email(request, email):
     user = Account.objects.get(email=email)
     otp = OtpToken.objects.get(user=user)
@@ -260,3 +262,31 @@ def verify_email(request, email):
     else:
         form = VerifyEmailForm()
         return render(request, "verify_email.html", {"form": form, "email": email})
+
+@login_required
+def account(request):
+    user = request.user
+    context = {
+        'user': user,
+    }
+    
+    return render(request, "account.html", context)
+
+@login_required
+def update_account(request):
+    countries = [country.name for country in pycountry.countries]
+    user = request.user
+
+    if request.method == 'POST':
+        form = UpdateAccountForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, _('Account updated successfully'))
+            return redirect('account')
+        else:
+            # Print form errors to debug
+            print(form.errors)
+    else:
+        form = UpdateAccountForm(instance=request.user)
+
+    return render(request, 'update_account.html', {'form': form, 'countries': countries, 'user': user})

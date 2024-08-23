@@ -1,0 +1,61 @@
+{% extends "base_generic.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+  <div class="background-banner">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="model-form">
+            <div class="custom-title">
+              <h3>{% trans "Update Your Account Information" %}</h3><br>
+            </div>
+            {% if messages %}
+            <div class="container-sm">
+              {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+              {% endfor %}
+            </div>
+            {% endif %}
+            <div class="card-body">
+              <form action="{% url 'update_account' %}" method="post" class="mt-4">
+                {% csrf_token %}
+                <div class="form-group">
+                  <label for="id_email">{% trans "Email:" %}</label>
+                  <input type="email" name="email" id="id_email" class="form-control" value="{{ user.email|default:'' }}">
+                </div>
+                <div class="form-group">
+                  <label for="id_phone_number">{% trans "Phone Number:" %}</label>
+                  <input type="text" name="phone_number" id="id_phone_number" class="form-control" value="{{ user.phone_number|default:'' }}">
+                </div>
+                <div class="form-group">
+                  <label for="id_first_name">{% trans "First Name:" %}</label>
+                  <input type="text" name="first_name" id="id_first_name" class="form-control" value="{{ user.first_name|default:'' }}">
+                </div>
+                <div class="form-group">
+                  <label for="id_last_name">{% trans "Last Name:" %}</label>
+                  <input type="text" name="last_name" id="id_last_name" class="form-control" value="{{ user.last_name|default:'' }}">
+                </div>
+                <div class="form-group">
+                  <label for="id_gender">{% trans "Gender:" %}</label>
+                  <select name="gender" id="id_gender" class="form-control">
+                    <option value="">{% trans "Select Gender" %}</option>
+                    <option value="Male" {% if user.get_gender_display == "Male" %}selected{% endif %}>{% trans "Male" %}</option>
+                    <option value="Female" {% if user.get_gender_display == "Female" %}selected{% endif %}>{% trans "Female" %}</option>
+                    <option value="Other" {% if user.get_gender_display == "Other" %}selected{% endif %}>{% trans "Other" %}</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="id_date_of_birth">{% trans "Date of Birth:" %}</label>
+                  <input type="date" name="date_of_birth" id="id_date_of_birth" class="form-control" value="{{ user.date_of_birth|date:'Y-m-d'|default:'' }}">
+                </div>
+                <button type="submit" class="btn btn-primary">{% trans "Update Information" %}</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

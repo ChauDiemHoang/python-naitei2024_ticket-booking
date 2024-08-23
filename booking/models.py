@@ -19,19 +19,18 @@ class Account(AbstractUser):
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Inactive')
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='Member')
     first_name = models.CharField(
-        max_length=MAX_LENGTH_NAME, verbose_name=_('first name'), default='New')
+        max_length=MAX_LENGTH_NAME, verbose_name=_('first name'), null=True)
     last_name = models.CharField(
-        max_length=MAX_LENGTH_NAME, verbose_name=_('last name'), default='User')
+        max_length=MAX_LENGTH_NAME, verbose_name=_('last name'), null=True)
     gender = models.CharField(
         max_length=MAX_LENGTH_CHOICES,
         choices=GENDER_CHOICES,
-        blank=True,
         null=True,
         verbose_name=_('gender')
     )
     date_of_birth = models.DateField(default=timezone.now)
-    passport_number = models.CharField(max_length=MAX_LENGTH_NAME, unique=True, null=True, blank=True)
-    nationality = models.CharField(max_length=MAX_LENGTH_NAME, default=_('Vietnamese'))
+    passport_number = models.CharField(max_length=MAX_LENGTH_NAME, unique=True, null=True)
+    nationality = models.CharField(max_length=MAX_LENGTH_NAME, default=_('Viet Nam'))
 
     REQUIRED_FIELDS = ['email', 'phone_number']
 
@@ -42,9 +41,6 @@ class Account(AbstractUser):
 
     def is_active(self):
         return self.status == 'Active'
-
-    def get_role_display(self):
-        return dict(self.ROLE_CHOICES).get(self.role, 'Unknown')
 
     def update_last_login(self):
         self.last_login = timezone.now()

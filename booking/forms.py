@@ -64,3 +64,8 @@ class VerifyEmailForm(forms.Form):
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': _('OTP')}), 
         label=_('OTP')
     )
+
+class UpdateAccountForm(forms.ModelForm):
+    class Meta:
+        model = Account
+        fields = ['email', 'phone_number', 'first_name', 'last_name', 'gender', 'date_of_birth', 'passport_number', 'nationality']

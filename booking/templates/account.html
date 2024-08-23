@@ -1,0 +1,40 @@
+{% extends "base_generic.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+  <div class="background-banner">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="model-form">
+            <div class="custom-title">
+              <h3>{% trans "Your Account Information" %}</h3><br>
+            </div>
+            {% if messages %}
+            <div class="container-sm">
+              {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+              {% endfor %}
+            </div>
+            {% endif %}
+            <div class="card-body">
+                <p><strong>{% trans "Username:" %}</strong> {{ user.username|default:'' }}</p>
+                <p><strong>{% trans "Email:" %}</strong> {{ user.email|default:'' }}</p>
+                <p><strong>{% trans "Phone Number:" %}</strong> {{ user.phone_number|default:'' }}</p>
+                <p><strong>{% trans "Status:" %}</strong> {{ user.get_status_display|default:'' }}</p>
+                <p><strong>{% trans "First Name:" %}</strong> {{ user.first_name|default:'' }}</p>
+                <p><strong>{% trans "Last Name:" %}</strong> {{ user.last_name|default:'' }}</p>
+                <p><strong>{% trans "Gender:" %}</strong> {{ user.get_gender_display|default:'' }}</p>
+                <p><strong>{% trans "Date of Birth:" %}</strong> {{ user.date_of_birth|date:"d M Y"|default:'' }}</p>
+                <form action="{% url 'update_account' %}" method="post" class="mt-4">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">{% trans "Update Information" %}</button>
+                </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
